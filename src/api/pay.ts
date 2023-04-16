@@ -59,7 +59,7 @@ const Pay = async function (app, { lightning, router }) {
     }
 
     // If the peer is connected, forward the LNURL-pay request via LN P2P.
-    if (await checkPeerConnected(lightning, user.pubkey)) {
+    if (user.supportsForward && await checkPeerConnected(lightning, user.pubkey)) {
       await handleLnurlPayRequest1Forwarding(lightning, user, response);
       return;
     } else if (config.disableCustodial) {
@@ -98,7 +98,7 @@ const Pay = async function (app, { lightning, router }) {
 
       const { amount, comment } = parseSendTextCallbackQueryParams(request.query);
 
-      if (await checkPeerConnected(lightning, user.pubkey)) {
+      if (user.supportsForward && await checkPeerConnected(lightning, user.pubkey)) {
         await handleLnurlPayRequest2Forwarding(lightning, user, amount, comment, response);
         return;
       } else if (config.disableCustodial) {
