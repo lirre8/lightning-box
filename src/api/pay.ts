@@ -186,10 +186,13 @@ function customMessageHandler(data: any) {
 
   try {
     const customMessage = lnrpc.CustomMessage.decode(data);
+    const decodedMsg = bytesToString(customMessage.data)
     if (customMessage.type !== LnurlPayRequestLNP2PType) {
+      console.log(`Peer: ${bytesToString(customMessage.peer)}`)
+      console.log(`Message: ${decodedMsg}`)
       throw new Error(`Unknown custom message type ${customMessage.type}`);
     }
-    const request = JSON.parse(bytesToString(customMessage.data)) as ILnurlPayForwardP2PMessage;
+    const request = JSON.parse(decodedMsg) as ILnurlPayForwardP2PMessage;
     console.log(request);
 
     if (request.request === "LNURLPAY_REQUEST1_RESPONSE") {
